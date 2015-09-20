@@ -1,0 +1,21 @@
+
+{
+	"name": "Laotu",
+	"manifest_version": 2,
+	"version": "0.1",
+	"permissions":
+	[
+		"tabs",
+		"http://*/*",
+		"https://*/*"
+	],
+	"browser_action":
+	{
+		"name": "Click to change the icon's color",
+		"default_title":"title....",
+		"default_badge":"badg",
+		"default_icon":"img/icon.png",
+        "default_popup": "popup.html"
+	}
+	
+}
