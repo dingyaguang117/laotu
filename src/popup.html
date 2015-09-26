@@ -1,29 +1,55 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
-  <head>
-    <title></title>
-    <style>
-      body {
-        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-        font-size: 100%;
-      }
-      #status {
-        /* avoid an excessively wide status text */
-        white-space: pre;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        max-width: 600px;
-      }
-    </style>
-    <script src="js/lib/jquery-1.11.2.min.js"></script>
-    <script src="js/lib/moment.min.js"></script>
-    <script src="js/popup.js"></script>
-  </head>
-  <body>
-    <div id="status">
+<head>
+  <title></title>
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/popup.css"/>
+</head>
+<body>
+<div id="basic-info">
 
-    </div>
-    <img id="image-result" hidden>
-  </body>
+</div>
+<div id="pv-info">
+
+</div>
+</body>
+
+
+
+<script id="basic-info-template" type="text/template">
+  <table class="table">
+    <tr>
+      <th colspan="2">基本信息</th>
+    </tr>
+    <tr>
+      <td colspan="2">{{title}}</td>
+    </tr>
+    <tr>
+      <td>SEO信息</td>
+      <td>
+        百度权重<img src="http://seo.chinaz.com/template/default/images/baiduapp/{{baidu_weight}}.gif"/>
+        Google<img src="http://seo.chinaz.com/template/default/images/ranks/Rank_{{google_pr}}.gif"/>
+      </td>
+    </tr>
+    <tr>
+      <td>域名IP</td>
+      <td>{{ip}}</td>
+    </tr>
+    <tr>
+      <td>域名年龄</td>
+      <td>{{domain_age}}</td>
+    </tr>
+  </table>
+</script>
+
+<script src="js/lib/jquery-1.11.2.min.js"></script>
+<script src="js/lib/template.js"></script>
+<script src="js/lib/highcharts.js"></script>
+<script src="js/lib/moment.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/popup.js"></script>
+
+
+
 </html>
 

@@ -1,0 +1,13 @@
+body {
+    font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+    font-size: 100%;
+}
+#basic-info {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 600px;
+}
+
+td, th{
+    text-align: center;
+}
