@@ -1,21 +1,21 @@
 
 {
-	"name": "Laotu",
+	"name": "老兔网站分析",
 	"manifest_version": 2,
 	"version": "0.1",
 	"permissions":
 	[
 		"tabs",
 		"http://*/*",
-		"https://*/*"
+		"https://*/*",
 	],
 	"browser_action":
 	{
-		"name": "Click to change the icon's color",
+		"name": "Show Website Info",
 		"default_title":"title....",
 		"default_badge":"badg",
 		"default_icon":"img/icon.png",
         "default_popup": "popup.html"
 	},
-  	"content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+  	"content_security_policy": "script-src  'self' 'unsafe-eval'; object-src 'self'"
 }

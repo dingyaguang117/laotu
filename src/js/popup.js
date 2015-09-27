@@ -44,6 +44,7 @@ function queryWebsiteInfo(url){
 
     // seo.chinaz.com
     var crawl_chinaz = function() {
+
         $.get('http://seo.chinaz.com/?host=' + host, function (data) {
             var p_ajax = new RegExp('getJSON\\("([^"]+)"');
             var p_baidu_weight = new RegExp('/(\\d)\.gif$');
@@ -51,41 +52,40 @@ function queryWebsiteInfo(url){
 
             tree = $($.parseHTML(data)).find('#seoinfo');
             if(tree.length == 0){
-                console.log(data)
-                var ajax_url = data.match(p_ajax)[1];
-                $.get(ajax_url, function (ajax_data) {
-                    if(ajax_data.indexOf('state:1') >= 0)
-                        return crawl_chinaz();
-                    else
-                        $("#basic-info").html("获取不到Seo数据,可能是网站无法访问造成或者尝试其它模拟方式抓取");
-                 });
+                var iframe = $('iframe')[0];
+                var chinaz_url = 'http://seo.chinaz.com/?host=' + host;
+                if(iframe.src != chinaz_url){
+                    iframe.src = chinaz_url;
+                }
+                setTimeout(crawl_chinaz, 3000);
+            }else{
+                info.title = tree.find('tr:eq(1) td').text();
+
+                try {
+                    info.baidu_weight = tree.find('td[title="Seo\u4fe1\u606f"]').next().find('span:eq(0) a img').attr('src').match(p_baidu_weight);
+                    info.baidu_weight = info.baidu_weight != null ? info.baidu_weight[1] : 0;
+                }catch(e){
+                    info.baidu_weight = -1;
+                }
+
+                try{
+                    info.google_pr = tree.find('#pr img').attr('src').match(p_google_pr);
+                    info.google_pr = info.google_pr != null ? info.google_pr[1] : 0;
+                }catch(e){
+                    info.google_pr = -2;
+                }
+
+                info.ip = tree.find('td[title="\u57df\u540dIP"]').next().text();
+
+                info.domain_age = tree.find('td[title="\u57df\u540d\u5e74\u9f84"]').next().text();
+                info.beian = tree.find('td[title="\u57df\u540d\u5907\u6848"]').next().text();
+
+                console.log(info)
+                $('#basic-info').html(template('basic-info-template', info));
             }
 
-            info.title = tree.find('tr:eq(1) td').text();
-
-            try {
-                info.baidu_weight = tree.find('td[title="Seo\u4fe1\u606f"]').next().find('span:eq(0) a img').attr('src').match(p_baidu_weight);
-                info.baidu_weight = info.baidu_weight != null ? info.baidu_weight[1] : 0;
-            }catch(e){
-                info.baidu_weight = null;
-            }
-
-            try{
-                info.google_pr = tree.find('#pr img').attr('src').match(p_google_pr);
-                info.google_pr = info.google_pr != null ? info.google_pr[1] : 0;
-            }catch(e){
-                info.google_pr = null;
-            }
-
-            info.ip = tree.find('td[title="\u57df\u540dIP"]').next().text();
-
-            info.domain_age = tree.find('td[title="\u57df\u540d\u5e74\u9f84"]').next().text();
-            info.beian = tree.find('td[title="\u57df\u540d\u5907\u6848"]').next().text();
 
 
-            $('#basic-info').html(template('basic-info-template', info));
-            //$('#basic-info').html(template('scan-result', info));
-            crawl_laoniu();
         });
     }
 
@@ -101,7 +101,7 @@ function queryWebsiteInfo(url){
             var pvs = data['data']['pv \u6570\u636e']['series'];
 
             pvs.forEach(function(pv){
-                dates.push(pv.xdate);
+                dates.push(pv.xdate.slice(5));
                 values.push(pv.value)
             })
             drawPv(dates, values);
@@ -109,6 +109,7 @@ function queryWebsiteInfo(url){
     }
 
     crawl_chinaz();
+    crawl_laoniu();
 }
 
 
@@ -116,3 +117,6 @@ function queryWebsiteInfo(url){
 $(function() {
   getCurrentTabUrl(queryWebsiteInfo);
 });
+
+
+
