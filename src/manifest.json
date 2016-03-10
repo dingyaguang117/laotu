@@ -2,12 +2,12 @@
 {
 	"name": "老兔网站分析",
 	"manifest_version": 2,
-	"version": "0.1",
+	"version": "0.2",
 	"permissions":
 	[
 		"tabs",
 		"http://*/*",
-		"https://*/*",
+		"https://*/*"
 	],
 	"browser_action":
 	{

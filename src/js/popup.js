@@ -3,7 +3,7 @@
  */
 
 
-function drawPv(dates, values){
+function drawPvUv(dates, pvs, uvs){
     $('#pv-info').highcharts({
         title: {
             text: '流量数据',
@@ -32,7 +32,8 @@ function drawPv(dates, values){
             borderWidth: 0
         },
         series: [
-            {name: 'PV', data: values },
+            {name: 'PV', data: pvs },
+            {name: 'UV', data: uvs },
         ]
     });
 }
@@ -59,25 +60,25 @@ function queryWebsiteInfo(url){
                 }
                 setTimeout(crawl_chinaz, 3000);
             }else{
-                info.title = tree.find('tr:eq(1) td').text();
+                info.title = tree.find('div:contains(网站基本信息)').parent().next().text();
 
                 try {
-                    info.baidu_weight = tree.find('td[title="Seo\u4fe1\u606f"]').next().find('span:eq(0) a img').attr('src').match(p_baidu_weight);
+                    info.baidu_weight = tree.find('span:contains(百度权重：)').next().find('img').attr('src').match(p_baidu_weight);
                     info.baidu_weight = info.baidu_weight != null ? info.baidu_weight[1] : 0;
                 }catch(e){
                     info.baidu_weight = -1;
                 }
 
                 try{
-                    info.google_pr = tree.find('#pr img').attr('src').match(p_google_pr);
+                    info.google_pr = tree.find('span:contains(Google：)').next().find('img').attr('src').match(p_google_pr);
                     info.google_pr = info.google_pr != null ? info.google_pr[1] : 0;
                 }catch(e){
                     info.google_pr = -2;
                 }
 
-                info.ip = tree.find('td[title="\u57df\u540dIP"]').next().text();
+                info.ip = tree.find('div[class="brn ipmW"] a').text();
 
-                info.domain_age = tree.find('td[title="\u57df\u540d\u5e74\u9f84"]').next().text();
+                info.domain_age = tree.find('a:contains(域名年龄)').parent().next().find('a').text()
                 info.beian = tree.find('td[title="\u57df\u540d\u5907\u6848"]').next().text();
 
                 console.log(info)
@@ -94,7 +95,7 @@ function queryWebsiteInfo(url){
         var endDate = moment().add(-2, 'days').format('YYYY-MM-DD 23:59:59');
         var pv_sum = 0;
 
-
+        /*
         $.post('http://www.laoniushuju.com/topn/site', {domain: host, beginDate: beginDate, endDate: endDate}, function (data) {
             var dates = [];
             var values = [];
@@ -105,7 +106,25 @@ function queryWebsiteInfo(url){
                 values.push(pv.value)
             })
             drawPv(dates, values);
-        });
+        });*/
+
+        $.post('http://www.laoniushuju.com/sitepvuv/seven', {domain: host, beginDate: beginDate, endDate: endDate}, function(data){
+            var dates = [];
+            var pvs = [];
+            var uvs = [];
+
+            data['data']['pv']['series'].forEach(function(pv){
+                dates.push(pv.xdate.slice(5));
+                pvs.push(pv.value)
+            })
+
+            data['data']['uv']['series'].forEach(function(uv){
+                uvs.push(uv.value)
+            })
+
+            drawPvUv(dates, pvs, uvs);
+        })
+
     }
 
     crawl_chinaz();
