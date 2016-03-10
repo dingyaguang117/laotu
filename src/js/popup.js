@@ -3,7 +3,7 @@
  */
 
 
-function drawPvUv(dates, pvs, uvs){
+function draw_pv_uv(dates, pvs, uvs){
     $('#pv-info').highcharts({
         title: {
             text: '流量数据',
@@ -38,7 +38,7 @@ function drawPvUv(dates, pvs, uvs){
     });
 }
 
-function queryWebsiteInfo(url){
+function query_website_info(url){
     info = {}
     var host = get_host(url);
     info.host = host;
@@ -91,24 +91,14 @@ function queryWebsiteInfo(url){
     }
 
     var crawl_laoniu = function(){
-        var beginDate = moment().add(-8, 'days').format('YYYY-MM-DD 00:00:00');
-        var endDate = moment().add(-2, 'days').format('YYYY-MM-DD 23:59:59');
+        var begin_date = moment().add(-8, 'days').format('YYYY-MM-DD 00:00:00');
+        var end_date = moment().add(-2, 'days').format('YYYY-MM-DD 23:59:59');
         var pv_sum = 0;
 
-        /*
-        $.post('http://www.laoniushuju.com/topn/site', {domain: host, beginDate: beginDate, endDate: endDate}, function (data) {
-            var dates = [];
-            var values = [];
-            var pvs = data['data']['pv \u6570\u636e']['series'];
 
-            pvs.forEach(function(pv){
-                dates.push(pv.xdate.slice(5));
-                values.push(pv.value)
-            })
-            drawPv(dates, values);
-        });*/
 
-        $.post('http://www.laoniushuju.com/sitepvuv/seven', {domain: host, beginDate: beginDate, endDate: endDate}, function(data){
+
+        $.post('http://www.laoniushuju.com/sitepvuv/seven', {domain: host, beginDate: begin_date, endDate: begin_date}, function(data){
             var dates = [];
             var pvs = [];
             var uvs = [];
@@ -122,9 +112,21 @@ function queryWebsiteInfo(url){
                 uvs.push(uv.value)
             })
 
-            drawPvUv(dates, pvs, uvs);
+            if(pvs.length == 0){
+                $.post('http://www.laoniushuju.com/topn/site', {domain: host, beginDate: begin_date, endDate: begin_date}, function (data) {
+                    var dates = [];
+                    var pvs = [];
+                    data['data']['pv \u6570\u636e']['series'].forEach(function(pv){
+                        dates.push(pv.xdate.slice(5));
+                        pvs.push(pv.value)
+                    })
+                    draw_pv_uv(dates, pvs, []);
+                });
+            }else
+            {
+                draw_pv_uv(dates, pvs, uvs);
+            }
         })
-
     }
 
     crawl_chinaz();
@@ -134,7 +136,7 @@ function queryWebsiteInfo(url){
 
 
 $(function() {
-  getCurrentTabUrl(queryWebsiteInfo);
+  get_current_tab_url(query_website_info);
 });
 
 

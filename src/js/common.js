@@ -7,12 +7,12 @@ String.prototype.endsWith = function(suffix) {
 };
 
 
-function getCurrentTabUrl(callback) {
-  var queryInfo = {
+function get_current_tab_url(callback) {
+  var query_info = {
     active: true,
     currentWindow: true
   };
-  chrome.tabs.query(queryInfo, function(tabs) {
+  chrome.tabs.query(query_info, function(tabs) {
     var tab = tabs[0];
     var url = tab.url;
     callback(url);
