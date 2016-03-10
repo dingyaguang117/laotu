@@ -84,21 +84,14 @@ function query_website_info(url){
                 console.log(info)
                 $('#basic-info').html(template('basic-info-template', info));
             }
-
-
-
         });
     }
 
     var crawl_laoniu = function(){
         var begin_date = moment().add(-8, 'days').format('YYYY-MM-DD 00:00:00');
         var end_date = moment().add(-2, 'days').format('YYYY-MM-DD 23:59:59');
-        var pv_sum = 0;
 
-
-
-
-        $.post('http://www.laoniushuju.com/sitepvuv/seven', {domain: host, beginDate: begin_date, endDate: begin_date}, function(data){
+        $.post('http://www.laoniushuju.com/sitepvuv/seven', {domain: host, beginDate: begin_date, endDate: end_date}, function(data){
             var dates = [];
             var pvs = [];
             var uvs = [];
@@ -113,7 +106,7 @@ function query_website_info(url){
             })
 
             if(pvs.length == 0){
-                $.post('http://www.laoniushuju.com/topn/site', {domain: host, beginDate: begin_date, endDate: begin_date}, function (data) {
+                $.post('http://www.laoniushuju.com/topn/site', {domain: host, beginDate: begin_date, endDate: end_date}, function (data) {
                     var dates = [];
                     var pvs = [];
                     data['data']['pv \u6570\u636e']['series'].forEach(function(pv){
